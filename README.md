@@ -19,7 +19,7 @@ DailySchedule は Spring Boot を用いて開発したスケジュール管理We
 
 ## スケジュール詳細画面
 
-<img width="800" src="https://github.com/user-attachments/assets/3ebcc054-a5e7-4947-b9fd-0b69267bc683" />
+<img width="800" src="https://github.com/user-attachments/assets/91437db5-a71b-4318-8342-5c4a3b278367" />
 
 <img width="800" src="https://github.com/user-attachments/assets/90b8c8c6-2702-41ec-b716-783223dc7b58" />
 
