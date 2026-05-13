@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Schedule Sheets</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 24px;
+      color: #222;
+      background: #fafafa;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      margin-bottom: 20px;
+    }
+
+    .page-header h1 {
+      margin: 0 0 8px;
+      font-size: 1.9rem;
+    }
+
+    .muted {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .box {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+
+    .box h2 {
+      margin-top: 0;
+      margin-bottom: 14px;
+      font-size: 1.2rem;
+    }
+
+    .error-box {
+      margin-bottom: 14px;
+      padding: 10px 12px;
+      border: 1px solid #e0a0a0;
+      background: #fff3f3;
+      color: #b00020;
+      border-radius: 8px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .field input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font: inherit;
+      background: #fff;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .primary-btn {
+      background: #0b57d0;
+      color: #fff;
+    }
+
+    .danger-btn {
+      background: #d93025;
+      color: #fff;
+    }
+
+    .secondary-link {
+      display: inline-block;
+      text-decoration: none;
+      color: #0b57d0;
+      font-weight: 600;
+    }
+
+    .empty {
+      color: #666;
+      padding: 10px 0;
+    }
+
+    .sheet-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sheet-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      border: 1px solid #e3e3e3;
+      border-radius: 10px;
+      background: #fcfcfc;
+      flex-wrap: wrap;
+    }
+
+    .sheet-main {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .sheet-title {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .sheet-link {
+      color: #0b57d0;
+      text-decoration: none;
+    }
+
+    .sheet-link:hover {
+      text-decoration: underline;
+    }
+
+    .sheet-meta {
+      color: #666;
+      font-size: 0.92rem;
+      word-break: break-word;
+    }
+
+    .item-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .delete-form {
+      margin: 0;
+    }
+
+    .small-btn {
+      padding: 8px 12px;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 720px) {
+      body {
+        margin: 14px;
+      }
+
+      .sheet-item {
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="page-header">
+    <h1>Schedule Sheets</h1>
+    <div class="muted">タイトルを入力して新しいスケジュールシートを作成できます。</div>
+  </div>
+
+  <div class="box">
+    <h2>新規作成</h2>
+
+    <div th:if="${errorMessage}" class="error-box" th:text="${errorMessage}"></div>
+
+    <form th:action="@{/schedule-sheets}" method="post">
+      <div class="field">
+        <label for="title">タイトル</label>
+        <input id="title"
+               type="text"
+               name="title"
+               placeholder="例: Weekday Plan"
+               required
+               maxlength="255"/>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="primary-btn">作成</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="box">
+    <h2>一覧</h2>
+
+    <div th:if="${#lists.isEmpty(sheets)}" class="empty">
+      まだスケジュールシートは作成されていません。
+    </div>
+
+    <div th:unless="${#lists.isEmpty(sheets)}" class="sheet-list">
+      <div th:each="sheet : ${sheets}" class="sheet-item">
+        <div class="sheet-main">
+          <div class="sheet-title">
+            <a th:href="@{/schedule-sheets/{slug}(slug=${sheet.slug})}"
+               th:text="${sheet.title}"
+               class="sheet-link">
+              Sample Sheet
+            </a>
+          </div>
+        </div>
+
+        <div class="item-actions">
+          <a th:href="@{/schedule-sheets/{slug}(slug=${sheet.slug})}"
+             class="secondary-link">
+            開く
+          </a>
+
+          <form th:action="@{/schedule-sheets/{slug}/delete(slug=${sheet.slug})}"
+                method="post"
+                class="delete-form">
+            <button type="submit" class="danger-btn small-btn"
+                    onclick="return confirm('このシートを削除しますか？');">
+              削除
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

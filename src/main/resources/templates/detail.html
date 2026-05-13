@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title th:text="${sheet.title} + ' | Schedule Detail'">Schedule Detail</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 24px;
+      color: #222;
+      background: #fafafa;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .title-block h1 {
+      margin: 0 0 6px;
+      font-size: 1.8rem;
+    }
+
+    .muted {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .back-link {
+      text-decoration: none;
+      color: #0b57d0;
+      font-weight: 600;
+    }
+
+    .box {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+
+    .box h2 {
+      margin-top: 0;
+      margin-bottom: 14px;
+      font-size: 1.2rem;
+    }
+
+    .error-box {
+      margin-bottom: 14px;
+      padding: 10px 12px;
+      border: 1px solid #e0a0a0;
+      background: #fff3f3;
+      color: #b00020;
+      border-radius: 8px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font: inherit;
+      background: #fff;
+    }
+
+    .field textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    .field-error {
+      margin-top: 6px;
+      color: #b00020;
+      font-size: 0.9rem;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .primary-btn {
+      background: #0b57d0;
+      color: #fff;
+    }
+
+    .danger-btn {
+      background: #d93025;
+      color: #fff;
+    }
+
+    .secondary-btn {
+      background: #eee;
+      color: #222;
+    }
+
+    .empty {
+      color: #666;
+      padding: 10px 0;
+    }
+
+    .schedule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .schedule-item {
+      border: 1px solid #e3e3e3;
+      border-radius: 10px;
+      padding: 14px;
+      background: #fcfcfc;
+    }
+
+    .schedule-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .schedule-main {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .pill-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border: 1px solid #ccc;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      background: #fff;
+    }
+
+    .time {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .memo {
+      margin-top: 8px;
+      white-space: pre-wrap;
+      color: #333;
+    }
+
+    .delete-form {
+      margin: 0;
+    }
+
+    .small-btn {
+      padding: 8px 12px;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 720px) {
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      body {
+        margin: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="title-block">
+      <h1 th:text="${sheet.title}">Schedule Title</h1>
+      <div class="muted">
+        URL:
+        <span th:text="${sheet.slug}">sample-slug</span>
+      </div>
+    </div>
+
+    <a th:href="@{/schedule-sheets}" class="back-link">← 一覧に戻る</a>
+  </div>
+
+  <div class="box">
+    <h2>予定を追加</h2>
+
+    <form th:action="@{/schedule-sheets/{slug}/entries(slug=${sheet.slug})}"
+          th:object="${form}"
+          method="post">
+
+      <div th:if="${errorMessage}" class="error-box" th:text="${errorMessage}"></div>
+
+      <div th:if="${#fields.hasGlobalErrors()}" class="error-box">
+        <div th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="type">種類</label>
+          <select id="type" th:field="*{type}">
+            <option value="">選択してください</option>
+            <option th:each="t : ${taskTypes}"
+                    th:value="${t}"
+                    th:text="${t.label}">
+            </option>
+          </select>
+          <div class="field-error"
+               th:if="${#fields.hasErrors('type')}"
+               th:errors="*{type}">
+            種類エラー
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="startTime">開始時刻</label>
+          <input id="startTime" type="time" th:field="*{startTime}"/>
+          <div class="field-error"
+               th:if="${#fields.hasErrors('startTime')}"
+               th:errors="*{startTime}">
+            開始時刻エラー
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="endTime">終了時刻</label>
+          <input id="endTime" type="time" th:field="*{endTime}"/>
+          <div class="field-error"
+               th:if="${#fields.hasErrors('endTime')}"
+               th:errors="*{endTime}">
+            終了時刻エラー
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="memo">メモ</label>
+        <textarea id="memo" th:field="*{memo}" placeholder="内容を入力"></textarea>
+        <div class="field-error"
+             th:if="${#fields.hasErrors('memo')}"
+             th:errors="*{memo}">
+          メモエラー
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="primary-btn">追加</button>
+        <a th:href="@{/schedule-sheets/{slug}(slug=${sheet.slug})}">
+          <button type="button" class="secondary-btn">入力を戻す</button>
+        </a>
+      </div>
+    </form>
+  </div>
+
+  <div class="box">
+    <h2>予定一覧</h2>
+
+    <div th:if="${#lists.isEmpty(schedules)}" class="empty">
+      まだ予定は登録されていません。
+    </div>
+
+    <div th:unless="${#lists.isEmpty(schedules)}" class="schedule-list">
+      <div th:each="e : ${schedules}" class="schedule-item">
+        <div class="schedule-top">
+          <div class="schedule-main">
+            <div class="pill-row">
+              <span class="pill" th:text="${e.typeLabel}">仕事</span>
+              <span class="time">
+                <span th:text="${e.startTime}">09:00</span>
+                〜
+                <span th:text="${e.endTime}">10:00</span>
+              </span>
+            </div>
+          </div>
+
+          <form th:action="@{/schedule-sheets/{slug}/entries/{entryId}/delete(slug=${sheet.slug}, entryId=${e.id})}"
+                method="post"
+                class="delete-form">
+            <button type="submit" class="danger-btn small-btn">削除</button>
+          </form>
+        </div>
+
+        <div class="memo" th:if="${e.memo != null and !#strings.isEmpty(e.memo)}" th:text="${e.memo}">
+          メモ
+        </div>
+        <div class="memo muted" th:if="${e.memo == null or #strings.isEmpty(e.memo)}">
+          メモなし
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
