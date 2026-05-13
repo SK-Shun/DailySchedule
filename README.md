@@ -251,17 +251,6 @@ Flywayを使用してスキーマ管理を行っています。
 V1__create_tables.sql
 V2__add_indexes.sql
 ```
-
----
-
-# 今後の改善予定
-
-- Spring Security導入
-- REST API化
-- Docker対応
-- カレンダーUI改善
-- 統計機能追加
-
 ---
 
 # Author
