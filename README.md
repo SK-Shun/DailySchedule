@@ -19,7 +19,16 @@ DailySchedule は Spring Boot を用いて開発したスケジュール管理We
 
 ## スケジュール詳細画面
 
-<img src="images/detail.png" width="800">
+<img width="800" src="https://github.com/user-attachments/assets/3ebcc054-a5e7-4947-b9fd-0b69267bc683" />
+
+<img width="800" src="https://github.com/user-attachments/assets/90b8c8c6-2702-41ec-b716-783223dc7b58" />
+
+<img width="800" src="https://github.com/user-attachments/assets/7d914d48-5bf6-4166-9230-f899a6228c6d" />
+
+<img width="800" src="https://github.com/user-attachments/assets/409bd0a8-abd5-411a-bcd8-f4d45801b324" />
+
+<img width="800" src="https://github.com/user-attachments/assets/5efbd49f-5e77-4005-9cc4-abe6071f2d4e" />
+
 
 同一種別(TaskType)の予定同士は時間帯が重複しないように実装しており、  
 Service層でバリデーションを行っています。
