@@ -21,12 +21,13 @@ DailySchedule は Spring Boot を用いて開発したスケジュール管理We
 
 <img width="800" src="https://github.com/user-attachments/assets/91437db5-a71b-4318-8342-5c4a3b278367" />
 
+事前に用意された選択肢から条件を選択
 <img width="800" src="https://github.com/user-attachments/assets/90b8c8c6-2702-41ec-b716-783223dc7b58" />
-
+種類と時間に内容を入力
 <img width="800" src="https://github.com/user-attachments/assets/7d914d48-5bf6-4166-9230-f899a6228c6d" />
-
+その後入力フォームの下にスケジュールが追加
 <img width="800" src="https://github.com/user-attachments/assets/409bd0a8-abd5-411a-bcd8-f4d45801b324" />
-
+同じ種類の被りは以下のようにメッセージで伝達
 <img width="800" src="https://github.com/user-attachments/assets/5efbd49f-5e77-4005-9cc4-abe6071f2d4e" />
 
 
