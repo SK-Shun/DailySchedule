@@ -253,7 +253,6 @@ PostgreSQLを使用したRepositoryテスト。
 
 - SpringBootTest
 - Testcontainers
-- Flyway
 
 主な統合テスト:
 
